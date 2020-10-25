@@ -1,0 +1,26 @@
+.section {
+  background-color: #3b3a39;
+  padding: 20px;
+  height: 30vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  color: #fff;
+  max-width: 100vw;
+  height: 10vh;
+  font-size: x-large;
+  padding-top: 5vh;
+  padding-bottom: 1vh;
+}
+
+.selector {
+  padding-left: 20px;
+  height: 10vh;
+  max-width: inherit;
+  font-size: medium;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #201f1f;
+}

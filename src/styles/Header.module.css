@@ -1,0 +1,11 @@
+.navBar {
+  background-color: #2d2c2c;
+  color: #fff;
+  width: 100vw;
+  height: 15vh;
+  font-size: large;
+  margin: 0px auto 0px auto;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
