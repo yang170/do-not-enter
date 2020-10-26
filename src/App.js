@@ -19,10 +19,20 @@ let App = () => {
     setSelection(mode);
   }
 
+  /**
+   * Being called when component did mount
+   */
   React.useEffect(() => {
     const discover = new Discover();
+    while (!discover.isDevicesDiscoverDone()){
+      console.log("loading")
+    }
     setDiscover(discover);
   }, [setDiscover]);
+
+  /**
+   * Being called when component did update
+   */
 
   return (
     <div>
