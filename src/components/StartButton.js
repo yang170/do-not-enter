@@ -1,14 +1,14 @@
 import React from "react";
 import styles from "../styles/StartButton.module.css"
-const {remote} = window.require("electron");
 
-let StartButton = (selection) => {
+let StartButton = ({selection, discover}) => {
 
     let handleOnClick = React.useCallback((selection) => () => {
-        const mainProcess = remote.require("./attack/discover.js");
-        console.log(selection)
-        mainProcess.test();
-    }, []);
+        console.log(discover.gatewayIP());
+        console.log(discover.privateIP());
+        console.log(selection);
+        
+    }, [discover]);
 
     return(
         <div className={styles.section}>
