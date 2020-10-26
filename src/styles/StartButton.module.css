@@ -21,6 +21,25 @@
   height: 10vh;
 }
 
+.scan {
+  background-color: #ff9100;
+  color: white;
+  border-style: none;
+  border-radius: 5px;
+  font-size: medium;
+  height: 10vh;
+  cursor: wait;
+}
+
+.stop {
+  background-color: #ff0000;
+  color: white;
+  border-style: none;
+  border-radius: 5px;
+  font-size: medium;
+  height: 10vh;
+}
+
 .start:hover {
   background-color: #605e5c;
 }
