@@ -10,6 +10,7 @@ let App = () => {
   const [selection, setSelection] = React.useState("0");
   const [started, setStarted] = React.useState(false);
   const [discover, setDiscover] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
 
   /**
    * Change the indicator (selection) which indicate which mode user selects
@@ -31,28 +32,45 @@ let App = () => {
    */
   React.useEffect(() => {
     const discover = new Discover();
-    setDiscover(discover);
-  }, [setDiscover]);
 
-  /**
-   * Being called when component did update
-   */
+    let interval = setInterval(() => {
+      let res = discover.hasInitialized();
+      setLoading(!res);
+      if (res === true) {
+        clearInterval(interval);
+      }
+    }, 500);
+
+    setDiscover(discover);
+  }, []);
 
   return (
-    <div>
+    <div className={styles.container}>
       <Header />
       <hr className={styles.seperator} />
-      <ModeSelector
-        changeSelection={changeSelectionHandler}
-        started={started}
-      />
-      <hr className={styles.seperator} />
-      <StartButton
-        selection={selection}
-        discover={discover}
-        started={started}
-        changeStarted={changeStartedHandler}
-      />
+      {loading ?
+        (
+          <div className={styles.loadingContainer}>
+            <div className={styles.loading}><div></div><div></div><div></div><div></div></div>
+            <p>Fetching gateway and host IP</p>
+
+          </div>
+        ) : (
+          <React.Fragment>
+            <ModeSelector
+              changeSelection={changeSelectionHandler}
+              started={started}
+            />
+            <hr className={styles.seperator} />
+            <StartButton
+              selection={selection}
+              discover={discover}
+              started={started}
+              changeStarted={changeStartedHandler}
+            />
+          </React.Fragment>
+        )
+      }
     </div>
   );
 };

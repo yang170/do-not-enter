@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "network": "^0.5.0",
+    "ping": "^0.3.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.0",
@@ -12,6 +13,7 @@
   },
   "main": "src/electron-starter.js",
   "scripts": {
+    "start-windows": "SET BROWSER=none && react-scripts start",
     "start": "export BROWSER=none && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
