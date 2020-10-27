@@ -1,20 +1,25 @@
 import React from "react";
 import styles from "../styles/ModeSelector.module.css";
 
-let ModeSelector = ({ changeSelection, started }) => {
+let ModeSelector = ({ changeSelection, selection, started }) => {
   const handleOnChange = React.useCallback(
     (event) => {
       const mode = event.target.value;
-      console.log(mode);
       changeSelection(mode);
     },
     [changeSelection]
   );
 
+  let headsup;
+  if (selection !== "0"){
+    headsup = (<p className={styles.headsup}>
+      You will be asked to provide root privilage to enable this mode
+      </p>);
+  }
   return (
     <div className={styles.section}>
       <label htmlFor="mode" className={styles.label}>
-        Chose a mode
+        Choose a mode
       </label>
       <select
         name="mode"
@@ -32,6 +37,7 @@ let ModeSelector = ({ changeSelection, started }) => {
           Spy on other devices
         </option>
       </select>
+      {headsup}
     </div>
   );
 };

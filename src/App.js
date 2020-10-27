@@ -63,6 +63,7 @@ let App = () => {
           <React.Fragment>
             <ModeSelector
               changeSelection={changeSelectionHandler}
+              selection={selection}
               started={started}
             />
             <hr className={styles.seperator} />

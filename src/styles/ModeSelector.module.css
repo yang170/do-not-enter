@@ -1,7 +1,7 @@
 .section {
   background-color: #3b3a39;
   padding: 20px;
-  height: 30vh;
+  min-height: 30vh;
   display: flex;
   flex-direction: column;
 }
@@ -15,6 +15,12 @@
   padding-bottom: 1vh;
 }
 
+.headsup {
+  color: #fff;
+  font-size: medium;
+  font-style: italic;
+}
+
 .selector {
   padding-left: 20px;
   height: 10vh;
@@ -26,6 +32,6 @@
   cursor: pointer;
 }
 
-.selector:disabled{
+.selector:disabled {
   cursor: not-allowed;
 }
