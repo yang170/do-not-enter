@@ -19,6 +19,7 @@
   border-radius: 5px;
   font-size: medium;
   height: 10vh;
+  cursor: pointer;
 }
 
 .scan {
@@ -32,14 +33,19 @@
 }
 
 .stop {
-  background-color: #ff0000;
+  background-color: #ab2222;
   color: white;
   border-style: none;
   border-radius: 5px;
   font-size: medium;
   height: 10vh;
+  cursor: pointer;
 }
 
 .start:hover {
   background-color: #605e5c;
+}
+
+.stop:hover{
+  background-color: #fc5603;
 }

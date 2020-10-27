@@ -23,4 +23,9 @@
   border-radius: 5px;
   color: #fff;
   background-color: #201f1f;
+  cursor: pointer;
+}
+
+.selector:disabled{
+  cursor: not-allowed;
 }

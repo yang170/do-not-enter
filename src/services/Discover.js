@@ -5,11 +5,13 @@ class Discover {
   gwIP;
   privIP;
   devices;
+  os;
   scanCount;
 
   constructor() {
     this.devices = [];
     this.scanCount = 0;
+    this.os = process.platform;
 
     network.get_gateway_ip((err, ip) => {
       if (!err) {
@@ -38,10 +40,14 @@ class Discover {
     return this.privIP;
   }
 
+  getOS() {
+    return this.os;
+  }
+
   scan() {
     // do not execute if we've scaned before
     if (this.devices.length === 0) {
-      console.log("INFO: Start scanning the network");
+      console.log("INFO: start scanning the network");
       let scanIP = this.gwIP.split(".");
       for (let i = 0; i <= 255; i++) {
         scanIP[3] = i.toString();
@@ -50,9 +56,13 @@ class Discover {
         }
       }
     } else {
-      console.log("INFO: Already scanned before");
+      console.log("INFO: already scanned before");
       console.log(this.devices);
     }
+  }
+
+  hasInitialized() {
+    return (this.gwIP !== undefined) && (this.privIP !== undefined);
   }
 
   isDevicesDiscoveryDone() {
@@ -63,17 +73,28 @@ class Discover {
   }
 
   ping(ip) {
-    const process = childProcess.spawn("ping", ["-c", "1", ip]);
-    process.on("exit", (code) => {
-      // ping success when return code is 0
-      if (code === 0) {
-        process.stdout.on("data", (data) => {
+    // use ping library for windows
+    if (this.os === "win32") {
+      var ping = require("ping");
+      ping.sys.probe(ip, (isAlive) => {
+        if (isAlive) {
           this.devices.push(ip);
           console.log("INFO: " + ip + " is reachable");
-        });
-      }
-      this.scanCount++;
-    });
+        }
+        this.scanCount++;
+      });
+      // use system call for macOS & ubuntu
+    } else {
+      let process = childProcess.spawn("ping", ["-c", "1", ip]);
+      process.on("exit", (code) => {
+        // ping success when return code is 0
+        if (code === 0) {
+          this.devices.push(ip);
+          console.log("INFO: " + ip + " is reachable");
+        }
+        this.scanCount++;
+      });
+    }
   }
 }
 
