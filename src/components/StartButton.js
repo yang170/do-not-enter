@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../styles/StartButton.module.css";
 
-let StartButton = ({ selection, discover, started, changeStarted }) => {
+let StartButton = ({ selection, discover, permission, started, changeStarted }) => {
   const [scanningDone, setScanningDone] = React.useState(false);
   const handleOnClickStartAttack = React.useCallback(
     (selection) => () => {
@@ -14,13 +14,40 @@ let StartButton = ({ selection, discover, started, changeStarted }) => {
           clearInterval(interval);
         }
       }, 500);
+
+      switch (selection){
+        case "0":
+          break;
+        case "1":
+          console.log(permission.getEnableStatus());
+          if (!permission.getEnableStatus()) permission.enableIPForwarding();
+          break;
+        case "2":
+          if (!permission.getEnableStatus()) permission.enableIPForwarding();
+          break;
+        default:
+          break;
+      }
+      
     },
-    [discover, changeStarted]
+    [discover, permission, changeStarted]
   );
 
   const handleOnClickStopAttack = React.useCallback(() => {
     changeStarted();
-  }, [changeStarted]);
+    switch (selection){
+      case "0":
+        break;
+      case "1":
+        if (permission.getEnableStatus()) permission.disableIPForwarding();
+        break;
+      case "2":
+        if (permission.getEnableStatus()) permission.disableIPForwarding();
+        break;
+      default:
+        break;
+    }
+  }, [changeStarted, permission, selection]);
 
   let button;
   if (started && !scanningDone) {

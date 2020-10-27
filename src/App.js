@@ -5,11 +5,13 @@ import { StartButton } from "./components/StartButton";
 import styles from "./styles/App.module.css";
 const { remote } = window.require("electron");
 const Discover = remote.require("./services/Discover.js");
+const Permission = remote.require("./services/Permission.js");
 
 let App = () => {
   const [selection, setSelection] = React.useState("0");
   const [started, setStarted] = React.useState(false);
   const [discover, setDiscover] = React.useState(null);
+  const [permission, setPermission] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
   /**
@@ -32,6 +34,7 @@ let App = () => {
    */
   React.useEffect(() => {
     const discover = new Discover();
+    const permission = new Permission();
 
     let interval = setInterval(() => {
       let res = discover.hasInitialized();
@@ -41,6 +44,7 @@ let App = () => {
       }
     }, 500);
 
+    setPermission(permission);
     setDiscover(discover);
   }, []);
 
@@ -65,6 +69,7 @@ let App = () => {
             <StartButton
               selection={selection}
               discover={discover}
+              permission={permission}
               started={started}
               changeStarted={changeStartedHandler}
             />
