@@ -1,7 +1,13 @@
 import React from "react";
 import styles from "../styles/StartButton.module.css";
 
-let StartButton = ({ selection, discover, permission, started, changeStarted }) => {
+let StartButton = ({
+  selection,
+  discover,
+  permission,
+  started,
+  changeStarted,
+}) => {
   const [scanningDone, setScanningDone] = React.useState(false);
   const handleOnClickStartAttack = React.useCallback(
     (selection) => () => {
@@ -15,7 +21,7 @@ let StartButton = ({ selection, discover, permission, started, changeStarted }) 
         }
       }, 500);
 
-      switch (selection){
+      switch (selection) {
         case "0":
           break;
         case "1":
@@ -28,14 +34,13 @@ let StartButton = ({ selection, discover, permission, started, changeStarted }) 
         default:
           break;
       }
-      
     },
     [discover, permission, changeStarted]
   );
 
   const handleOnClickStopAttack = React.useCallback(() => {
     changeStarted();
-    switch (selection){
+    switch (selection) {
       case "0":
         break;
       case "1":
