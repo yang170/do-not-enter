@@ -12,6 +12,7 @@ class Discover {
     this.devices = [];
     this.scanCount = 0;
     this.os = process.platform;
+    console.log("INFO: os is " + this.os);
 
     network.get_gateway_ip((err, ip) => {
       if (!err) {

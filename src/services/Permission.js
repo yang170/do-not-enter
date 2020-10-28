@@ -7,7 +7,6 @@ class Permission {
   constructor() {
     this.forwardingEnabled = false;
     this.os = process.platform;
-    console.log(this.os);
   }
 
   enableIPForwarding() {
