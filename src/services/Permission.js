@@ -17,7 +17,7 @@ class Permission {
 
     if (this.os === "win32") {
       sudo.exec(
-        "Set-NetIPInterface -Forwarding Enabled",
+        "powershell -Command \"Set-NetIPInterface -Forwarding Enabled\"",
         options,
         (error, _stdout, _stderr) => {
           if (error) {
@@ -58,7 +58,7 @@ class Permission {
 
     if (this.os === "win32") {
       sudo.exec(
-        "Set-NetIPInterface -Forwarding Disabled",
+        "powershell -Command \"Set-NetIPInterface -Forwarding Disabled\"",
         options,
         (error, _stdout, _stderr) => {
           if (error) {

@@ -11,10 +11,10 @@ let ModeSelector = ({ changeSelection, selection, started }) => {
   );
 
   let headsup;
-  if (selection !== "0"){
+  if (selection !== "0") {
     headsup = (<p className={styles.headsup}>
-      You will be asked to provide root privilage to enable this mode
-      </p>);
+      You will be asked to provide root privilage to enable/disabled this mode
+    </p>);
   }
   return (
     <div className={styles.section}>
