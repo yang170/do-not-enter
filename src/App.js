@@ -3,9 +3,6 @@ import { Header } from "./components/Header";
 import { ModeSelector } from "./components/ModeSelector";
 import { StartButton } from "./components/StartButton";
 import styles from "./styles/App.module.css";
-const { remote } = window.require("electron");
-const Discover = remote.require("./services/Discover.js");
-const Permission = remote.require("./services/Permission.js");
 
 let App = () => {
   const [selection, setSelection] = React.useState("0");
@@ -33,8 +30,8 @@ let App = () => {
    * Being called when component did mount
    */
   React.useEffect(() => {
-    const discover = new Discover();
-    const permission = new Permission();
+    const discover = window.Discover();
+    const permission = window.Permission();
 
     let interval = setInterval(() => {
       let res = discover.hasInitialized();
