@@ -41,3 +41,14 @@ npm run electron
 - Searching & Attacking
 
 ![searching](./doc/searching.png)
+
+# Credits
+Libraries being used in this project
+- electron
+- network
+- ping
+- react
+- react-dom
+- react-scripts
+- sudo-prompt
+- web-vitals
