@@ -65,7 +65,7 @@ class Discover {
     return (this.gwIP !== undefined) && (this.privIP !== undefined);
   }
 
-  isDevicesDiscoveryDone() {
+  hasDevicesDiscoveryDone() {
     if (this.scanCount === 254) {
       console.log("INFO: device discovery is done");
     }

@@ -14,7 +14,7 @@ let StartButton = ({
       discover.scan();
       changeStarted();
       let interval = setInterval(() => {
-        let res = discover.isDevicesDiscoveryDone();
+        let res = discover.hasDevicesDiscoveryDone();
         setScanningDone(res);
         if (res === true) {
           clearInterval(interval);
