@@ -28,7 +28,6 @@ npm run start
 
 ### xxx was compiled against a different Node.js version using NODE_MODULE_VERSION xxx
 
-Solution:
 You need to run electron-rebulid after the installation.
 
 For windows:
