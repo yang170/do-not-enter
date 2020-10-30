@@ -9,6 +9,7 @@ let App = () => {
   const [started, setStarted] = React.useState(false);
   const [discover, setDiscover] = React.useState(null);
   const [permission, setPermission] = React.useState(null);
+  const [arp, setArp] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
   /**
@@ -38,6 +39,8 @@ let App = () => {
       setLoading(!res);
       if (res === true) {
         clearInterval(interval);
+        const Arp = window.Arp(discover.privateIP());
+        setArp(Arp);
       }
     }, 500);
 
@@ -68,6 +71,7 @@ let App = () => {
               selection={selection}
               discover={discover}
               permission={permission}
+              arp={arp}
               started={started}
               changeStarted={changeStartedHandler}
             />

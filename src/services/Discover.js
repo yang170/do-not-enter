@@ -1,5 +1,5 @@
-var network = require("network");
-var childProcess = require("child_process");
+const network = require("network");
+const {exec} = require("child_process");
 
 class Discover {
   gwIP;
@@ -9,7 +9,7 @@ class Discover {
   scanCount;
 
   constructor() {
-    this.devices = [];
+    this.devices = new Map();
     this.scanCount = 0;
     this.os = process.platform;
     console.log("INFO: os is " + this.os);
@@ -47,7 +47,7 @@ class Discover {
 
   scan() {
     // do not execute if we've scaned before
-    if (this.devices.length === 0) {
+    if (this.devices.size === 0) {
       console.log("INFO: start scanning the network");
       let scanIP = this.gwIP.split(".");
       for (let i = 0; i <= 255; i++) {
@@ -73,27 +73,28 @@ class Discover {
     return this.scanCount >= 254;
   }
 
+  getMac(ip){
+    return exec("arp -a " + ip, (error, stdout, stderr) => {
+      if (error){
+        console.log(stderr);
+      }else{
+        this.devices[ip] = stdout.match(/([a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2})/g);
+        console.log("INFO: " + ip + " : " + this.devices[ip] + " is reachable");
+        this.scanCount++;
+      }
+    });
+  }
+
   ping(ip) {
     // use ping library for windows
     if (this.os === "win32") {
       var ping = require("ping");
       ping.sys.probe(ip, (isAlive) => {
         if (isAlive) {
-          this.devices.push(ip);
-          console.log("INFO: " + ip + " is reachable");
+          this.getMac(ip);
+        }else{
+          this.scanCount++;
         }
-        this.scanCount++;
-      });
-      // use system call for macOS & ubuntu
-    } else {
-      let process = childProcess.spawn("ping", ["-c", "1", ip]);
-      process.on("exit", (code) => {
-        // ping success when return code is 0
-        if (code === 0) {
-          this.devices.push(ip);
-          console.log("INFO: " + ip + " is reachable");
-        }
-        this.scanCount++;
       });
     }
   }
