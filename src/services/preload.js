@@ -4,13 +4,13 @@ const Arp = require("./Arp.js");
 
 console.log("preload");
 window.Discover = () => {
-    return new Discover();
-}
+  return new Discover();
+};
 
 window.Permission = () => {
-    return new Permission();
-}
+  return new Permission();
+};
 
 window.Arp = (privateIP, gatewayIP) => {
-    return new Arp(privateIP, gatewayIP);
-}
+  return new Arp(privateIP, gatewayIP);
+};

@@ -1,5 +1,5 @@
 const network = require("network");
-const {exec} = require("child_process");
+const { exec } = require("child_process");
 
 class Discover {
   gwIP;
@@ -41,12 +41,12 @@ class Discover {
     return this.privIP;
   }
 
-  getMAC(ip){
+  getMAC(ip) {
     let res;
-    if (this.devices.size !== 0){
+    if (this.devices.size !== 0) {
       res = this.devices.get(ip);
-    }else{
-      res = "ff:ff:ff:ff:ff:ff"
+    } else {
+      res = "ff:ff:ff:ff:ff:ff";
     }
     return res;
   }
@@ -73,7 +73,7 @@ class Discover {
   }
 
   hasInitialized() {
-    return (this.gwIP !== undefined) && (this.privIP !== undefined);
+    return this.gwIP !== undefined && this.privIP !== undefined;
   }
 
   hasDevicesDiscoveryDone() {
@@ -83,14 +83,18 @@ class Discover {
     return this.scanCount >= 254;
   }
 
-  getMac(ip){
+  getMac(ip) {
     return exec("arp -a " + ip, (error, stdout, stderr) => {
-      if (error){
+      if (error) {
         console.log(stderr);
-      }else{
-        const mac = stdout.match(/([a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2})/g);
-        this.devices.set(ip, mac[0].replace(/-/g, ':'));
-        console.log("INFO: " + ip + " : " + this.devices.get(ip) + " is reachable");
+      } else {
+        const mac = stdout.match(
+          /([a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2})/g
+        );
+        this.devices.set(ip, mac[0].replace(/-/g, ":"));
+        console.log(
+          "INFO: " + ip + " : " + this.devices.get(ip) + " is reachable"
+        );
         this.scanCount++;
       }
     });
@@ -103,7 +107,7 @@ class Discover {
       ping.sys.probe(ip, (isAlive) => {
         if (isAlive) {
           this.getMac(ip);
-        }else{
+        } else {
           this.scanCount++;
         }
       });

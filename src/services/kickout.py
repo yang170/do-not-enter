@@ -13,5 +13,5 @@ if mode == "0":
     sendp(Ether(dst=gatewayMAC)/ARP(psrc=targetIP, pdst=gatewayIP), inter=1, loop=1)
 else:
     for i in range(5):
-        sendp(Ether(dst=gatewayMAC, src=targetMAC)/ARP(psrc=targetIP, pdst=gatewayIP))
-
+        sendp(Ether(dst=gatewayMAC, src=targetMAC) /
+              ARP(psrc=targetIP, pdst=gatewayIP))

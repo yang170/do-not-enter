@@ -53,32 +53,34 @@ let App = () => {
     <div className={styles.container}>
       <Header />
       <hr className={styles.seperator} />
-      {loading ?
-        (
-          <div className={styles.loadingContainer}>
-            <div className={styles.loading}><div></div><div></div><div></div><div></div></div>
-            <p>Fetching gateway and host IP</p>
-
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          <div className={styles.loading}>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
-        ) : (
-          <React.Fragment>
-            <ModeSelector
-              changeSelection={changeSelectionHandler}
-              selection={selection}
-              started={started}
-            />
-            <hr className={styles.seperator} />
-            <StartButton
-              selection={selection}
-              discover={discover}
-              permission={permission}
-              arp={arp}
-              started={started}
-              changeStarted={changeStartedHandler}
-            />
-          </React.Fragment>
-        )
-      }
+          <p>Fetching gateway and host IP</p>
+        </div>
+      ) : (
+        <React.Fragment>
+          <ModeSelector
+            changeSelection={changeSelectionHandler}
+            selection={selection}
+            started={started}
+          />
+          <hr className={styles.seperator} />
+          <StartButton
+            selection={selection}
+            discover={discover}
+            permission={permission}
+            arp={arp}
+            started={started}
+            changeStarted={changeStartedHandler}
+          />
+        </React.Fragment>
+      )}
     </div>
   );
 };
