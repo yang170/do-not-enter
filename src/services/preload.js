@@ -11,6 +11,6 @@ window.Permission = () => {
     return new Permission();
 }
 
-window.Arp = (privateIP) => {
-    return new Arp(privateIP);
+window.Arp = (privateIP, gatewayIP) => {
+    return new Arp(privateIP, gatewayIP);
 }

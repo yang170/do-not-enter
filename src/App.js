@@ -36,10 +36,11 @@ let App = () => {
 
     let interval = setInterval(() => {
       let res = discover.hasInitialized();
-      setLoading(!res);
       if (res === true) {
+        setLoading(!res);
         clearInterval(interval);
-        const Arp = window.Arp(discover.privateIP());
+        console.log(discover.gatewayIP());
+        const Arp = window.Arp(discover.privateIP(), discover.gatewayIP());
         setArp(Arp);
       }
     }, 500);

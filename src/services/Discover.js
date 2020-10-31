@@ -41,6 +41,16 @@ class Discover {
     return this.privIP;
   }
 
+  getMAC(ip){
+    let res;
+    if (this.devices.size !== 0){
+      res = this.devices.get(ip);
+    }else{
+      res = "ff:ff:ff:ff:ff:ff"
+    }
+    return res;
+  }
+
   getOS() {
     return this.os;
   }
@@ -78,8 +88,9 @@ class Discover {
       if (error){
         console.log(stderr);
       }else{
-        this.devices[ip] = stdout.match(/([a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2})/g);
-        console.log("INFO: " + ip + " : " + this.devices[ip] + " is reachable");
+        const mac = stdout.match(/([a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2}-[a-z0-9]{2})/g);
+        this.devices.set(ip, mac[0].replace(/-/g, ':'));
+        console.log("INFO: " + ip + " : " + this.devices.get(ip) + " is reachable");
         this.scanCount++;
       }
     });

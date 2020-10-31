@@ -1,46 +1,54 @@
-const Cap = require('cap').Cap;
+const {spawn} = require("child_process");
 
 class Arp {
-    c;
-    device;
-    linkType;
-    filter;
+    privIP;
+    gateIP;
+    processList;
 
-    constructor(privateIP){
-        this.c = new Cap();
-        this.device = Cap.findDevice(privateIP);
-        this.filter = "arp";
-        const bufSize = 10 * 1024 * 1024;
-        let buffer = Buffer.alloc(65535);
-        this.linkType = this.c.open(this.device, this.filter, bufSize, buffer);
-        console.log(this.device);
+    constructor(privateIP, gatewayIP){
+       this.privIP = privateIP;
+       this.gateIP = gatewayIP;
+       this.processList = [];
     }
     
-    sendArpTo(targetMAC){
-
-        var buffer = Buffer.from([
-            // ETHERNET
-            0xff, 0xff, 0xff, 0xff, 0xff,0xff,                  // 0    = Destination MAC
-            0x84, 0x8F, 0x69, 0xB7, 0x3D, 0x92,                 // 6    = Source MAC
-            0x08, 0x06,                                         // 12   = EtherType = ARP
-            // ARP
-            0x00, 0x01,                                         // 14/0   = Hardware Type = Ethernet (or wifi)
-            0x08, 0x00,                                         // 16/2   = Protocol type = ipv4 (request ipv4 route info)
-            0x06, 0x04,                                         // 18/4   = Hardware Addr Len (Ether/MAC = 6), Protocol Addr Len (ipv4 = 4)
-            0x00, 0x01,                                         // 20/6   = Operation (ARP, who-has)
-            0x84, 0x8f, 0x69, 0xb7, 0x3d, 0x92,                 // 22/8   = Sender Hardware Addr (MAC)
-            0xc0, 0xa8, 0x01, 0xc8,                             // 28/14  = Sender Protocol address (ipv4)
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00,                 // 32/18  = Target Hardware Address (Blank/nulls for who-has)
-            0xc0, 0xa8, 0x01, 0xc9                              // 38/24  = Target Protocol address (ipv4)
-        ]);
-        
-        try {
-          // send will not work if pcap_sendpacket is not supported by underlying `device`
-          this.c.send(buffer, buffer.length);
-        } catch (e) {
-          console.log("Error sending packet:", e);
-        }
+    kickoutStart(targetIP, gatewayMAC){
+      const cmdPath = "./src/services/kickout.py";
+      const proc = spawn("python", [cmdPath, this.gateIP, targetIP, gatewayMAC, "_targetMAC", "0"], {detached: true});
+      proc.on("error", (err) => {
+        console.log(err);
+      });
+      console.log(proc.pid);
+      this.processList.push(proc.pid);
     }
+
+    kickoutHardStop(){
+      for (let i = 0; i < this.processList.length; i++){
+        console.log("Info: stopping attack by killing process " + this.processList[i]);
+        process.kill(this.processList[i]);
+      }
+    }
+
+    kickoutStop(targetIP, gatewayMAC, targetMAC){
+      const cmdPath = "./src/services/kickout.py";
+      const proc = spawn("python", [cmdPath, this.gateIP, targetIP, gatewayMAC, targetMAC, "1"], {detached: true});
+      proc.on("error", (err) => {
+        console.log(err);
+      });
+      console.log(proc.pid);
+      this.processList.push(proc.pid);
+    }
+
+    /**
+     * Some routers will block ARP packet when the sender IP address is the same as the router.
+     * This method is a walk around of this issue, when this method is called, user can only see
+     * the packets send to the target, but not packets send by the target.
+     * @param {string} targetIP 
+     * @param {string} gatewayMAC 
+     */
+    spyLimited(targetIP, gatewayMAC){
+      this.kickoutStart(targetIP, gatewayMAC);
+    }
+
     
 }
 

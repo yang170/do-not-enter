@@ -5,6 +5,7 @@ let StartButton = ({
   selection,
   discover,
   permission,
+  arp,
   started,
   changeStarted,
 }) => {
@@ -15,33 +16,36 @@ let StartButton = ({
       changeStarted();
       let interval = setInterval(() => {
         let res = discover.hasDevicesDiscoveryDone();
-        setScanningDone(res);
         if (res === true) {
+          setScanningDone(res);
           clearInterval(interval);
+          switch (selection) {
+            case "0":
+              const targetIP = "192.168.3.13"
+              const gatewayMAC = discover.getMAC(discover.gatewayIP());
+              arp.kickoutStart(targetIP, gatewayMAC);
+              break;
+            case "1":
+              console.log(permission.getEnableStatus());
+              if (!permission.getEnableStatus()) permission.enableIPForwarding();
+              break;
+            case "2":
+              if (!permission.getEnableStatus()) permission.enableIPForwarding();
+              break;
+            default:
+              break;
+          }
         }
       }, 500);
-
-      switch (selection) {
-        case "0":
-          break;
-        case "1":
-          console.log(permission.getEnableStatus());
-          if (!permission.getEnableStatus()) permission.enableIPForwarding();
-          break;
-        case "2":
-          if (!permission.getEnableStatus()) permission.enableIPForwarding();
-          break;
-        default:
-          break;
-      }
     },
-    [discover, permission, changeStarted]
+    [discover, permission, changeStarted, arp]
   );
 
-  const handleOnClickStopAttack = React.useCallback(() => {
+  const handleOnClickStopAttack = React.useCallback((selection) => () => {
     changeStarted();
     switch (selection) {
       case "0":
+        arp.kickoutHardStop();
         break;
       case "1":
         if (permission.getEnableStatus()) permission.disableIPForwarding();
@@ -52,7 +56,7 @@ let StartButton = ({
       default:
         break;
     }
-  }, [changeStarted, permission, selection]);
+  }, [changeStarted, permission, arp]);
 
   let button;
   if (started && !scanningDone) {
@@ -63,7 +67,7 @@ let StartButton = ({
     );
   } else if (started && scanningDone) {
     button = (
-      <button className={styles.stop} onClick={handleOnClickStopAttack}>
+      <button className={styles.stop} onClick={handleOnClickStopAttack(selection)}>
         Stop
       </button>
     );
