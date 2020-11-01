@@ -19,19 +19,20 @@ class Arp {
       { detached: true }
     );
     proc.on("error", (err) => {
-      console.log(err);
+      console.log("INFO:" + err);
     });
-    console.log(proc.pid);
+    console.log("INFP: spawn process " + proc.pid);
     this.processList.push(proc.pid);
   }
 
   kickoutHardStop() {
     for (let i = 0; i < this.processList.length; i++) {
       console.log(
-        "Info: stopping attack by killing process " + this.processList[i]
+        "INFO: stopping attack by killing process " + this.processList[i]
       );
       process.kill(this.processList[i]);
     }
+    this.processList = [];
   }
 
   kickoutStop(targetIP, gatewayMAC, targetMAC) {

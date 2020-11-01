@@ -8,7 +8,7 @@ The goal of this project is to provide an easy to use and cross-platform applica
 
 # Setup the development environment
 
-`node js` and `npm` is required to run this project in the development environment.
+`node.js`, `python3.x` and `npm` is required to run this project in the development environment.
 After clone the project, please use the following command to download dependencies.
 
 ```bash
@@ -66,10 +66,6 @@ npm install
 - Main page
 
 ![main](./doc/main.png)
-
-- Searching & Attacking
-
-![searching](./doc/searching.png)
 
 # Credits
 

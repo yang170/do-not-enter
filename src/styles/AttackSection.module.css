@@ -18,8 +18,9 @@
   border-style: none;
   border-radius: 5px;
   font-size: medium;
-  height: 10vh;
+  height: 3.75rem;
   cursor: pointer;
+  margin-top: 1rem;
 }
 
 .scan {
@@ -28,8 +29,9 @@
   border-style: none;
   border-radius: 5px;
   font-size: medium;
-  height: 10vh;
+  height: 3.75rem;
   cursor: wait;
+  margin-top: 1rem;
 }
 
 .stop {
@@ -38,8 +40,9 @@
   border-style: none;
   border-radius: 5px;
   font-size: medium;
-  height: 10vh;
+  height: 3.75rem;
   cursor: pointer;
+  margin-top: 1rem;
 }
 
 .start:hover {

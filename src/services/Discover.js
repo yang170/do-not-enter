@@ -41,6 +41,10 @@ class Discover {
     return this.privIP;
   }
 
+  clearDevicesMap() {
+    this.devices.clear();
+  }
+
   getMAC(ip) {
     let res;
     if (this.devices.size !== 0) {
@@ -58,11 +62,16 @@ class Discover {
   scan() {
     // do not execute if we've scaned before
     if (this.devices.size === 0) {
+      this.scanCount = 0;
       console.log("INFO: start scanning the network");
       let scanIP = this.gwIP.split(".");
       for (let i = 0; i <= 255; i++) {
         scanIP[3] = i.toString();
-        if (scanIP.join(".") !== this.privIP) {
+        // do not put current machine and the gateway to the device list
+        if (
+          scanIP.join(".") !== this.privIP &&
+          scanIP.join(".") !== this.gwIP
+        ) {
           this.ping(scanIP.join("."));
         }
       }

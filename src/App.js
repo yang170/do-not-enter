@@ -1,31 +1,51 @@
 import React from "react";
 import { Header } from "./components/Header";
 import { ModeSelector } from "./components/ModeSelector";
-import { StartButton } from "./components/StartButton";
+import { AttackSection } from "./components/AttackSection";
 import styles from "./styles/App.module.css";
 
 let App = () => {
+  /**
+   * Front-end state
+   */
   const [selection, setSelection] = React.useState("0");
-  const [started, setStarted] = React.useState(false);
+  const [attackState, setAttackState] = React.useState("scan");
+  const [selectedDevices, setSelectedDevices] = React.useState([]);
+  /**
+   * Remote objects to handle searching, os interaction, and ARP attack
+   */
   const [discover, setDiscover] = React.useState(null);
   const [permission, setPermission] = React.useState(null);
   const [arp, setArp] = React.useState(null);
+  /**
+   * Loading indicator
+   */
   const [loading, setLoading] = React.useState(true);
 
   /**
    * Change the indicator (selection) which indicate which mode user selects
    * @param {int} mode
    */
-  let changeSelectionHandler = React.useCallback((mode) => {
+  const changeSelectionHandler = React.useCallback((mode) => {
     setSelection(mode);
   }, []);
 
   /**
-   * Change the started state
+   * Change the attack state. Attack has three possible state, they are start, scan, and stop
    */
-  let changeStartedHandler = React.useCallback(() => {
-    setStarted(!started);
-  }, [started]);
+  const changeAttackStateHandler = React.useCallback((newAttackState) => {
+    setAttackState(newAttackState);
+  }, []);
+
+  /**
+   * Change selected devices in the device table
+   */
+  const changeSelectedDevicesHandler = React.useCallback(
+    (newSelectedDevices) => {
+      setSelectedDevices(newSelectedDevices);
+    },
+    []
+  );
 
   /**
    * Being called when component did mount
@@ -39,7 +59,6 @@ let App = () => {
       if (res === true) {
         setLoading(!res);
         clearInterval(interval);
-        console.log(discover.gatewayIP());
         const Arp = window.Arp(discover.privateIP(), discover.gatewayIP());
         setArp(Arp);
       }
@@ -68,16 +87,18 @@ let App = () => {
           <ModeSelector
             changeSelection={changeSelectionHandler}
             selection={selection}
-            started={started}
+            started={attackState === "start"}
           />
           <hr className={styles.seperator} />
-          <StartButton
+          <AttackSection
             selection={selection}
             discover={discover}
             permission={permission}
             arp={arp}
-            started={started}
-            changeStarted={changeStartedHandler}
+            attackState={attackState}
+            changeAttackStateHandler={changeAttackStateHandler}
+            selectedDevices={selectedDevices}
+            changeSelectedDevicesHandler={changeSelectedDevicesHandler}
           />
         </React.Fragment>
       )}

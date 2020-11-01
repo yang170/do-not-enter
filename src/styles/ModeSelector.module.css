@@ -24,6 +24,7 @@
 .selector {
   padding-left: 20px;
   height: 10vh;
+  max-height: 3.75rem;
   max-width: inherit;
   font-size: medium;
   border-radius: 5px;
