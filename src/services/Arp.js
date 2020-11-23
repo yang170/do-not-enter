@@ -14,7 +14,7 @@ class Arp {
   kickoutStart(targetIP, gatewayMAC) {
     const cmdPath = "./src/services/kickout.py";
     const proc = spawn(
-      "python",
+      "python3",
       [cmdPath, this.gateIP, targetIP, gatewayMAC, "_targetMAC", "0"],
       { detached: true }
     );
@@ -25,7 +25,7 @@ class Arp {
     this.processList.push(proc.pid);
   }
 
-  kickoutHardStop() {
+  attackHardStop() {
     for (let i = 0; i < this.processList.length; i++) {
       console.log(
         "INFO: stopping attack by killing process " + this.processList[i]
@@ -45,7 +45,7 @@ class Arp {
     proc.on("error", (err) => {
       console.log(err);
     });
-    console.log(proc.pid);
+    console.log("Process " + proc.pid + "spawned");
     this.processList.push(proc.pid);
   }
 
@@ -56,8 +56,22 @@ class Arp {
    * @param {string} targetIP
    * @param {string} gatewayMAC
    */
-  spyLimited(targetIP, gatewayMAC) {
+  spyLimitedStart(targetIP, gatewayMAC) {
     this.kickoutStart(targetIP, gatewayMAC);
+  }
+
+  spyStart(targetIP, targetMAC, gatewayMAC) {
+    const cmdPath = "./src/services/spy.py";
+    const proc = spawn(
+      "python3",
+      [cmdPath, this.gateIP, targetIP, gatewayMAC, targetMAC, "0"],
+      { detached: true }
+    );
+    proc.on("error", (err) => {
+      console.log(err);
+    });
+    console.log("Process " + proc.pid + "spawned");
+    this.processList.push(proc.pid);
   }
 }
 
