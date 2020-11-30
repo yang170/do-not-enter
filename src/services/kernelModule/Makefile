@@ -1,5 +1,5 @@
 KERNEL = /lib/modules/$(shell uname -r)/build
-obj-m += netfilterDropPacket.o
+obj-m += netfilter_drop_packet.o
 
 all:
 	${MAKE} -C ${KERNEL} M=$(PWD) modules

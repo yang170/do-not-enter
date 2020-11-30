@@ -11,15 +11,11 @@ let App = () => {
   const [selection, setSelection] = React.useState("0");
   const [attackState, setAttackState] = React.useState("scan");
   const [selectedDevices, setSelectedDevices] = React.useState([]);
-  /**
-   * Remote objects to handle searching, os interaction, and ARP attack
-   */
+  // Remote objects to handle searching, os interaction, and ARP attack
   const [discover, setDiscover] = React.useState(null);
   const [permission, setPermission] = React.useState(null);
   const [arp, setArp] = React.useState(null);
-  /**
-   * Loading indicator
-   */
+  // Loading indicator
   const [loading, setLoading] = React.useState(true);
 
   /**

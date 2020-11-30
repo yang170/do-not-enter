@@ -3,21 +3,21 @@ var sudo = require("sudo-prompt");
 class Permission {
   forwardingEnabled;
   os;
+  options;
 
   constructor() {
     this.forwardingEnabled = false;
     this.os = process.platform;
+    this.options = {
+      name: "DoNotEnter",
+    };
   }
 
   enableIPForwarding() {
-    var options = {
-      name: "DoNotEnter",
-    };
-
     if (this.os === "win32") {
       sudo.exec(
         'powershell -Command "Set-NetIPInterface -Forwarding Enabled"',
-        options,
+        this.options,
         (error, _stdout, _stderr) => {
           if (error) {
             console.log(error);
@@ -28,7 +28,7 @@ class Permission {
     } else if (this.os === "darwin") {
       sudo.exec(
         "sysctl -w net.inet.ip.forwarding=1",
-        options,
+        this.options,
         (error, _stdout, _stderr) => {
           if (error) {
             console.log(error);
@@ -39,7 +39,7 @@ class Permission {
     } else {
       sudo.exec(
         "sysctl -w net.ipv4.ip_forward=1",
-        options,
+        this.options,
         (error, _stdout, _stderr) => {
           if (error) {
             console.log(error);
@@ -51,14 +51,10 @@ class Permission {
   }
 
   disableIPForwarding() {
-    var options = {
-      name: "DoNotEnter",
-    };
-
     if (this.os === "win32") {
       sudo.exec(
         'powershell -Command "Set-NetIPInterface -Forwarding Disabled"',
-        options,
+        this.options,
         (error, _stdout, _stderr) => {
           if (error) {
             console.log(error);
@@ -69,7 +65,7 @@ class Permission {
     } else if (this.os === "darwin") {
       sudo.exec(
         "sysctl -w net.inet.ip.forwarding=0",
-        options,
+        this.options,
         (error, _stdout, _stderr) => {
           if (error) {
             console.log(error);
@@ -80,7 +76,7 @@ class Permission {
     } else {
       sudo.exec(
         "sysctl -w net.ipv4.ip_forward=0",
-        options,
+        this.options,
         (error, _stdout, _stderr) => {
           if (error) {
             console.log(error);
@@ -90,6 +86,8 @@ class Permission {
       );
     }
   }
+
+  removeKernelModule() {}
 
   getEnableStatus() {
     return this.forwardingEnabled;
