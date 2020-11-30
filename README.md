@@ -2,9 +2,9 @@
 
 The goal of this project is to provide an easy to use and cross-platform application which allows users to influence other devices’ network connection in the same WLAN/LAN. The functionality of this application is backed by ARP poisoning. The application will provide three modes:
 
-- Kick other devices out: prevent other devices from accessing the WLAN/LAN.
-- Speed limit: Reduce other devices’ network access speed. This is achieved by routing other devices' packets through your device, and selectively or randomly dropping certain portions of packets.
-- Advanced: route other devices’ packets through your device, such that you can monitor other devices’ network activity.
+- Kick other devices out:white_check_mark:: prevent other devices from accessing the WLAN/LAN.
+- Speed limit:construction:: Reduce other devices’ network access speed. This is achieved by routing other devices' packets through your device, and selectively or randomly dropping certain portions of packets. (:warning:This mode is only avaliable on linux)
+- Advanced:white_check_mark:: route other devices’ packets through your device, such that you can monitor other devices’ network activity.
 
 # Setup the development environment
 
