@@ -7,7 +7,7 @@
 #include <linux/ip.h>
 #include <linux/random.h>
 #include <linux/limits.h>
-#define DEBUG 1
+#define DEBUG 0
 
 static struct nf_hook_ops *nfho = NULL;
 static int percent = 100;
