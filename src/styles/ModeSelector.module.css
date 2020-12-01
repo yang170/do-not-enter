@@ -21,6 +21,11 @@
   font-style: italic;
 }
 
+.text {
+  color: #fff;
+  font-size: medium;
+}
+
 .selector {
   padding-left: 20px;
   height: 10vh;

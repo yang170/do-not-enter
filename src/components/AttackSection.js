@@ -5,6 +5,7 @@ import styles from "../styles/AttackSection.module.css";
 
 let AttackSection = ({
   selection,
+  speedLimitPercent,
   discover,
   permission,
   arp,
@@ -41,6 +42,11 @@ let AttackSection = ({
           case "1":
             console.log(permission.getEnableStatus());
             if (!permission.getEnableStatus()) permission.enableIPForwarding();
+            selectedDevices.forEach((ip) => {
+              console.log("INFO: start spying on " + ip);
+              arp.spyStart(ip, discover.devices.get(ip), discover.gwMAC);
+            });
+            arp.speedLimitStart(speedLimitPercent, selectedDevices, false);
             break;
           case "2":
             if (!permission.getEnableStatus()) permission.enableIPForwarding();
@@ -54,7 +60,14 @@ let AttackSection = ({
         }
       }
     },
-    [discover, permission, changeAttackStateHandler, arp, selectedDevices]
+    [
+      discover,
+      permission,
+      changeAttackStateHandler,
+      arp,
+      selectedDevices,
+      speedLimitPercent,
+    ]
   );
 
   const handleOnClickStopAttack = React.useCallback(
@@ -62,15 +75,15 @@ let AttackSection = ({
       changeAttackStateHandler("stop");
       switch (selection) {
         case "0":
-          arp.attackHardStop();
+          arp.killAttackProcesses();
           break;
         case "1":
           if (permission.getEnableStatus()) permission.disableIPForwarding();
-          arp.attackHardStop();
+          arp.killAttackProcesses();
           break;
         case "2":
           if (permission.getEnableStatus()) permission.disableIPForwarding();
-          arp.attackHardStop();
+          arp.killAttackProcesses();
           break;
         default:
           break;

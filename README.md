@@ -8,12 +8,14 @@ The goal of this project is to provide an easy to use and cross-platform applica
 
 # Setup the development environment
 
-`node.js`, `python3.x` and `npm` is required to run this project in the development environment.
+`node.js`, `python` >= 3.0 and `npm` is required to run this project in the development environment.
 After clone the project, please use the following command to download dependencies.
 
 ```bash
 npm install
 ```
+
+Also make sure you installed `scapy` as a super user/administrator
 
 # Run the project
 

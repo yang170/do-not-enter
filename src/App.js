@@ -11,6 +11,7 @@ let App = () => {
   const [selection, setSelection] = React.useState("0");
   const [attackState, setAttackState] = React.useState("scan");
   const [selectedDevices, setSelectedDevices] = React.useState([]);
+  const [speedLimitPercent, setSpeedLimitPercent] = React.useState(50);
   // Remote objects to handle searching, os interaction, and ARP attack
   const [discover, setDiscover] = React.useState(null);
   const [permission, setPermission] = React.useState(null);
@@ -42,6 +43,13 @@ let App = () => {
     },
     []
   );
+
+  /**
+   * Change speed limit percent
+   */
+  const changeSpeedLimitPercentHandler = React.useCallback((newPercent) => {
+    setSpeedLimitPercent(newPercent);
+  }, []);
 
   /**
    * Being called when component did mount
@@ -82,12 +90,15 @@ let App = () => {
         <React.Fragment>
           <ModeSelector
             changeSelection={changeSelectionHandler}
+            changeSpeedLimitPercent={changeSpeedLimitPercentHandler}
             selection={selection}
+            speedLimitPercent={speedLimitPercent}
             started={attackState === "start"}
           />
           <hr className={styles.seperator} />
           <AttackSection
             selection={selection}
+            speedLimitPercent={speedLimitPercent}
             discover={discover}
             permission={permission}
             arp={arp}
