@@ -1,4 +1,5 @@
 var sudo = require("sudo-prompt");
+var { exec } = require("child_process");
 
 class Permission {
   forwardingEnabled;
@@ -87,8 +88,88 @@ class Permission {
     }
   }
 
+  /**
+   * Helper function, set netcap for linux
+   */
+  static setNetCap() {
+    if (process.platform === "linux") {
+      exec("python3 --version", (error, stdout, stderr) => {
+        if (error) {
+          console.log(stderr);
+        }
+        const pyVersion = stdout.match(/[0-9].[0-9]/g)[0];
+        console.log("INFO: python version is " + pyVersion);
+        exec("which tcpdump", (error, stdout, stderr) => {
+          if (error) {
+            console.log(stderr);
+          }
+          const tcpdumpLocation = stdout;
+          console.log("INFO: tcpdump at " + tcpdumpLocation);
+          const options = {
+            name: "DoNotEnter",
+          };
+          sudo.exec(
+            "setcap cap_net_raw=eip /usr/bin/python" +
+              pyVersion +
+              " && setcap cap_net_raw=eip " +
+              tcpdumpLocation,
+            options,
+            (error, _stdout, _stderr) => {
+              if (error) {
+                console.log(error);
+              }
+            }
+          );
+        });
+      });
+    } else {
+      console.log("ERROR: other platforms does not require set/unset netcap");
+    }
+  }
+
+  /**
+   * Helper function, unset netcap for linux
+   */
+  static unsetNetcap(callback) {
+    if (process.platform === "linux") {
+      exec("python3 --version", (error, stdout, stderr) => {
+        if (error) {
+          console.log(stderr);
+        }
+        const pyVersion = stdout.match(/[0-9].[0-9]/g)[0];
+        exec("which tcpdump", (error, stdout, stderr) => {
+          if (error) {
+            console.log(stderr);
+          }
+          const tcpdumpLocation = stdout;
+          const options = {
+            name: "DoNotEnter",
+          };
+          sudo.exec(
+            "setcap cap_net_raw=-eip /usr/bin/python" +
+              pyVersion +
+              " && setcap cap_net_raw=-eip " +
+              tcpdumpLocation,
+            options,
+            (error, _stdout, _stderr) => {
+              if (error) {
+                console.log(error);
+              }
+              callback();
+            }
+          );
+        });
+      });
+    } else {
+      console.log("ERROR: other platforms does not require set/unset netcap");
+    }
+  }
+
   removeKernelModule() {}
 
+  /**
+   * Helper function, get ipforwarding status
+   */
   getEnableStatus() {
     return this.forwardingEnabled;
   }
