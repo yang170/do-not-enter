@@ -26,6 +26,12 @@ Start the local server using
 npm run start
 ```
 
+Then start the application using
+
+```bash
+npm run electron
+```
+
 ## Issues
 
 ### xxx was compiled against a different Node.js version using NODE_MODULE_VERSION xxx
@@ -42,12 +48,6 @@ For linux/macOS:
 
 ```
 $(npm bin)/electron-rebuild
-```
-
-Then start the application using
-
-```bash
-npm run electron
 ```
 
 ### module did not self-register

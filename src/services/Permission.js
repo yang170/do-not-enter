@@ -1,5 +1,5 @@
-var sudo = require("sudo-prompt");
-var { exec } = require("child_process");
+const sudo = require("sudo-prompt");
+const { exec } = require("child_process");
 
 class Permission {
   forwardingEnabled;
@@ -75,8 +75,9 @@ class Permission {
         }
       );
     } else {
+      // linux
       sudo.exec(
-        "sysctl -w net.ipv4.ip_forward=0",
+        "sysctl -w net.ipv4.ip_forward=0 && rmmod netfilter_drop_packet",
         this.options,
         (error, _stdout, _stderr) => {
           if (error) {
@@ -89,83 +90,93 @@ class Permission {
   }
 
   /**
-   * Helper function, set netcap for linux
+   * Helper function, set netcap and kernel module for linux
    */
-  static setNetCap() {
-    if (process.platform === "linux") {
-      exec("python3 --version", (error, stdout, stderr) => {
+  static linuxSetup() {
+    Permission.compileKernelModule();
+    exec("python3 --version", (error, stdout, stderr) => {
+      if (error) {
+        console.log(stderr);
+      }
+      const pyVersion = stdout.match(/[0-9].[0-9]/g)[0];
+      console.log("INFO: python version is " + pyVersion);
+      exec("which tcpdump", (error, stdout, stderr) => {
         if (error) {
           console.log(stderr);
         }
-        const pyVersion = stdout.match(/[0-9].[0-9]/g)[0];
-        console.log("INFO: python version is " + pyVersion);
-        exec("which tcpdump", (error, stdout, stderr) => {
-          if (error) {
-            console.log(stderr);
-          }
-          const tcpdumpLocation = stdout;
-          console.log("INFO: tcpdump at " + tcpdumpLocation);
-          const options = {
-            name: "DoNotEnter",
-          };
-          sudo.exec(
-            "setcap cap_net_raw=eip /usr/bin/python" +
-              pyVersion +
-              " && setcap cap_net_raw=eip " +
-              tcpdumpLocation,
-            options,
-            (error, _stdout, _stderr) => {
-              if (error) {
-                console.log(error);
-              }
+        const tcpdumpLocation = stdout;
+        console.log("INFO: tcpdump at " + tcpdumpLocation);
+        const options = {
+          name: "DoNotEnter",
+        };
+        sudo.exec(
+          "setcap cap_net_raw=eip /usr/bin/python" +
+            pyVersion +
+            " && setcap cap_net_raw=eip " +
+            tcpdumpLocation,
+          options,
+          (error, _stdout, _stderr) => {
+            if (error) {
+              console.log(error);
             }
-          );
-        });
+          }
+        );
       });
-    } else {
-      console.log("ERROR: other platforms does not require set/unset netcap");
-    }
+    });
   }
 
   /**
    * Helper function, unset netcap for linux
    */
-  static unsetNetcap(callback) {
-    if (process.platform === "linux") {
-      exec("python3 --version", (error, stdout, stderr) => {
+  static linuxCleanup(callback) {
+    Permission.cleanKernelModule();
+    exec("python3 --version", (error, stdout, stderr) => {
+      if (error) {
+        console.log(stderr);
+      }
+      const pyVersion = stdout.match(/[0-9].[0-9]/g)[0];
+      exec("which tcpdump", (error, stdout, stderr) => {
         if (error) {
           console.log(stderr);
         }
-        const pyVersion = stdout.match(/[0-9].[0-9]/g)[0];
-        exec("which tcpdump", (error, stdout, stderr) => {
-          if (error) {
-            console.log(stderr);
-          }
-          const tcpdumpLocation = stdout;
-          const options = {
-            name: "DoNotEnter",
-          };
-          sudo.exec(
-            "setcap cap_net_raw=-eip /usr/bin/python" +
-              pyVersion +
-              " && setcap cap_net_raw=-eip " +
-              tcpdumpLocation,
-            options,
-            (error, _stdout, _stderr) => {
-              if (error) {
-                console.log(error);
-              }
-              callback();
+        const tcpdumpLocation = stdout;
+        const options = {
+          name: "DoNotEnter",
+        };
+        sudo.exec(
+          "setcap cap_net_raw=-eip /usr/bin/python" +
+            pyVersion +
+            " && setcap cap_net_raw=-eip " +
+            tcpdumpLocation,
+          options,
+          (error, _stdout, _stderr) => {
+            if (error) {
+              console.log(error);
             }
-          );
-        });
+            callback();
+          }
+        );
       });
-    } else {
-      console.log("ERROR: other platforms does not require set/unset netcap");
-    }
+    });
   }
 
-  removeKernelModule() {}
+  static compileKernelModule() {
+    const modulePath = process.cwd() + "/src/services/kernelModule";
+    exec("make", { cwd: modulePath }, (error, _stdout, stderr) => {
+      if (error) {
+        console.log("ERROR: " + stderr);
+      }
+    });
+  }
+
+  static cleanKernelModule() {
+    const modulePath = process.cwd() + "/src/services/kernelModule";
+    exec("make clean", { cwd: modulePath }, (error, _stdout, stderr) => {
+      if (error) {
+        console.log("ERROR: " + stderr);
+      }
+    });
+  }
 
   /**
    * Helper function, get ipforwarding status

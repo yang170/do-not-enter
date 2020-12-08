@@ -7,6 +7,7 @@ let ModeSelector = ({
   selection,
   speedLimitPercent,
   started,
+  os,
 }) => {
   const handleModeOnChange = React.useCallback(
     (event) => {
@@ -66,8 +67,8 @@ let ModeSelector = ({
         <option value="0" className={styles.option}>
           Kick other devices out
         </option>
-        <option value="1" className={styles.option}>
-          Limit other devices' access speed
+        <option value="1" className={styles.option} disabled={os !== "linux"}>
+          Limit other devices' access speed (linux only)
         </option>
         <option value="2" className={styles.option}>
           Spy on other devices

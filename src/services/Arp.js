@@ -67,15 +67,16 @@ class Arp {
     this.processList.push(proc.pid);
   }
 
-  speedLimitStart(percent, victimIPs, limited) {
+  speedLimitStart(percent, victimIPs) {
     if (process.platform === "linux") {
-      const modulePath = "./kernelModule/netfilter_drop_packet.ko";
+      const modulePath =
+        process.cwd() + "/src/services/kernelModule/netfilter_drop_packet.ko";
       const cmd =
-        "inmod " +
+        "insmod " +
         modulePath +
         " percent=" +
         percent +
-        " victimIP=" +
+        " victimIPs=" +
         victimIPs;
       const options = {
         name: "DoNotEnter",

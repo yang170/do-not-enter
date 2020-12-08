@@ -4,7 +4,7 @@
 #include <linux/kernel.h>
 #include <linux/netfilter.h>
 #include <linux/netfilter_ipv4.h>
-#include <linux/ip.h>
+#include <linux/ip.h>s
 #include <linux/random.h>
 #include <linux/limits.h>
 #define DEBUG 0
@@ -22,16 +22,18 @@ static unsigned int discard_target_packets(void *priv, struct sk_buff *skb, cons
     int i = 0;
     int rand_num = get_random_int() % 100;
     char sender[16];
+    char destination[16];
     if (!skb)
         return NF_ACCEPT;
 
     iph = ip_hdr(skb);
     snprintf(sender, 16, "%pI4", &iph->saddr);
+    snprintf(destination, 16, "%pI4", &iph->daddr);
 
     // drop the packet if the packet is from the victim
     for (i = 0; i < count; i++)
     {
-        if (strcmp(sender, victimIPs[i]) == 0 && rand_num > percent)
+        if (strcmp(sender, victimIPs[i]) == 0 && rand_num < percent)
         {
             return NF_DROP;
         }
@@ -46,6 +48,7 @@ static unsigned int discard_target_packets(void *priv, struct sk_buff *skb, cons
             printk(KERN_INFO "victim IP: %s\n", victimIPs[i]);
         }
         printk(KERN_INFO "send by: %s\n", sender);
+        printk(KERN_INFO "distination is: %s\n", destination);
     }
 
     return NF_ACCEPT;
@@ -53,6 +56,7 @@ static unsigned int discard_target_packets(void *priv, struct sk_buff *skb, cons
 
 static int __init LKM_init(void)
 {
+    printk(KERN_INFO "module inserted");
     nfho = (struct nf_hook_ops *)kcalloc(1, sizeof(struct nf_hook_ops), GFP_KERNEL);
 
     /* Initialize netfilter hook */

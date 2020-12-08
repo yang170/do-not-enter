@@ -43,10 +43,10 @@ let AttackSection = ({
             console.log(permission.getEnableStatus());
             if (!permission.getEnableStatus()) permission.enableIPForwarding();
             selectedDevices.forEach((ip) => {
-              console.log("INFO: start spying on " + ip);
+              console.log("INFO: start limiting " + ip);
               arp.spyStart(ip, discover.devices.get(ip), discover.gwMAC);
             });
-            arp.speedLimitStart(speedLimitPercent, selectedDevices, false);
+            arp.speedLimitStart(speedLimitPercent, selectedDevices.join(","));
             break;
           case "2":
             if (!permission.getEnableStatus()) permission.enableIPForwarding();

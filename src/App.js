@@ -94,6 +94,7 @@ let App = () => {
             selection={selection}
             speedLimitPercent={speedLimitPercent}
             started={attackState === "start"}
+            os={discover.os}
           />
           <hr className={styles.seperator} />
           <AttackSection
