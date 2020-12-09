@@ -160,6 +160,9 @@ class Permission {
     });
   }
 
+  /**
+   * Helper function, compiler kernel module for linux
+   */
   static compileKernelModule() {
     const modulePath = process.cwd() + "/src/services/kernelModule";
     exec("make", { cwd: modulePath }, (error, _stdout, stderr) => {
@@ -169,6 +172,9 @@ class Permission {
     });
   }
 
+  /**
+   * Helper function, clear kernel module for linux
+   */
   static cleanKernelModule() {
     const modulePath = process.cwd() + "/src/services/kernelModule";
     exec("make clean", { cwd: modulePath }, (error, _stdout, stderr) => {

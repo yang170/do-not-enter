@@ -18,7 +18,6 @@ class Discover {
     network.get_gateway_ip((err, ip) => {
       if (!err) {
         this.gwIP = ip;
-        this.gwIP = "192.168.100.2";
         console.log("INFO: gateway ip is " + ip);
       } else {
         console.log("ERROR: " + err);
