@@ -9,7 +9,7 @@ The goal of this project is to provide an easy to use and cross-platform applica
 # Setup the development environment
 
 `node.js`, `python` >= 3.0, `scapy` (installed as a super user/administrator) and `npm` is required to run this project in the development environment.
-You should be able to run python in the terminal/powershell using `python3`, otherwise the app will stuck at the loading screen.
+You should be able to run python in the terminal/powershell using command `python3`, otherwise the app will crash when you are trying to stop the attack.
 After clone the project, please use the following command to download dependencies.
 
 ```bash
@@ -22,7 +22,7 @@ Currently the project can only be ran in the development environment. A packaged
 Start the local server using
 
 ```bash
-npm run start # use npm run start-windows if your os is windows
+npm run start # npm run start-windows if your os is windows
 ```
 
 Then start the application using
