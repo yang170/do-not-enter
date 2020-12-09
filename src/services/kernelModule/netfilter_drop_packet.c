@@ -4,7 +4,7 @@
 #include <linux/kernel.h>
 #include <linux/netfilter.h>
 #include <linux/netfilter_ipv4.h>
-#include <linux/ip.h>s
+#include <linux/ip.h>
 #include <linux/random.h>
 #include <linux/limits.h>
 #define DEBUG 0
